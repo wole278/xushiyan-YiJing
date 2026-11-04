@@ -1,4 +1,4 @@
-# 徐氏易经研究 · xushiyan-YiJing
+# 徐时言-易经研究 · xushiyan-YiJing
 
 《周易》笺注、元研究、词义训诂与融合研究的**公开成品库**。
 
@@ -29,4 +29,4 @@
 
 引用格式建议：
 
-> 徐氏易经研究. 《周易笺注》等. https://github.com/wole278/xushiyan-YiJing ，访问日期：YYYY-MM-DD.
+> 徐时言-易经研究. 《周易笺注》等. https://github.com/wole278/xushiyan-YiJing ，访问日期：YYYY-MM-DD.
