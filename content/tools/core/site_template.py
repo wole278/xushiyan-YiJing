@@ -137,7 +137,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
             <span class="section-eyebrow">INTERACTIVE 64 HEXAGRAMS MATRIX</span>
             <h2 class="section-title">《周易》六十四卦与十翼交互式速查方阵</h2>
           </div>
-          <p class="section-desc">点击任意卦象卡片直达《03 周易笺注》权威主母本，或一键切换至该卦的《04 单卦研究总结》与《01 四级审议报告》</p>
+          <p class="section-desc">点击任意卦象卡片直达《03 周易笺注史鉴》权威主母本，或一键切换至该卦的《04 单卦研究总结》与《01 四级审议报告》</p>
         </div>
 
         <div class="hex-toolbar">
@@ -1983,7 +1983,7 @@ PORTAL_JS = r"""/* =============================================================
             <div class="hex-guaci-text" title="${escapeHtml(h.guaci)}">${escapeHtml(h.guaci)}</div>
           </div>
           <div class="hex-quick-links" onclick="event.stopPropagation()">
-            <a href="${masterUrl}" class="hex-qlink" title="03 周易笺注主母本">主母本</a>
+            <a href="${masterUrl}" class="hex-qlink" title="03 周易笺注史鉴主母本">主母本</a>
             <a href="${recUrl}" class="hex-qlink" title="04 单卦研究总结">单卦研究</a>
             <a href="${revUrl}" class="hex-qlink" title="01 四级审议报告">审议报告</a>
           </div>
@@ -2230,7 +2230,7 @@ PORTAL_JS = r"""/* =============================================================
               masterId
                 ? `<a href="#/doc/${encodeURIComponent(masterId)}" class="wb-tab ${
                     meta.id === masterId ? "active" : ""
-                  }">📖 03 周易笺注主母本</a>`
+                  }">📖 03 周易笺注史鉴主母本</a>`
                 : ""
             }
             ${recs

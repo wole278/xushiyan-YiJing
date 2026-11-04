@@ -3,18 +3,16 @@
   "site_url": "https://wole278.github.io/xushiyan-YiJing/",
   "author": "徐时言",
   "copyright_years": "2026",
-  "source_commit": "cd62f26",
-  "published_at": "2026-11-04T04:34:30Z",
-  "documents": 99,
+  "source_commit": "7dd0dab",
+  "published_at": "2026-11-04T07:37:43Z",
+  "documents": 27,
   "branches": {
-    "02 元研究": 9,
-    "03 周易笺注": 73,
+    "02 元研究": 10,
     "05 词义研究记录": 10,
     "06 融合研究记录": 7
   },
   "branch_desc": {
     "02 元研究": "本体论公理与方法论专论",
-    "03 周易笺注": "64 卦权威笺注主母本 + 十翼传文底本（65–72）",
     "05 词义研究记录": "甲骨金文字源、全经穷尽式词义训诂",
     "06 融合研究记录": "历史、考古与经传交叉研究"
   },

@@ -53,13 +53,13 @@ MODULES_META = [
     },
     {
         "code": "03",
-        "dir": "03 周易笺注",
-        "title": "03 周易笺注",
-        "short": "周易笺注",
+        "dir": "03 周易笺注史鉴",
+        "title": "03 周易笺注史鉴",
+        "short": "周易笺注史鉴",
         "icon": "📖",
         "subtitle": "64 卦权威主母本 · 十翼传文底本 · 一卦一档",
         "desc": "通行本《周易》01 乾卦至 64 未济卦最终权威笺注主文档（含卦解、爻解、典论核验、1644信史史鉴）及 65~72 十翼传文底本。",
-        "default_doc": "03 周易笺注/README.md",
+        "default_doc": "03 周易笺注史鉴/README.md",
     },
     {
         "code": "04",
@@ -93,13 +93,13 @@ MODULES_META = [
     },
     {
         "code": "07",
-        "dir": "07 人物分析",
-        "title": "07 人物分析",
-        "short": "人物分析",
+        "dir": "07 易经模型人事分析",
+        "title": "07 易经模型人事分析",
+        "short": "易经模型人事分析",
         "icon": "👤",
         "subtitle": "六位时位矩阵 · 全生命周期战略研判专栏",
         "desc": "依托 384 爻时位实证矩阵与生生四判据，对曹操、秦始皇、刘邦、毛泽东、王猛、周恩来等历史人物开展去脸谱化的唯物战略解构。",
-        "default_doc": "07 人物分析/README.md",
+        "default_doc": "07 易经模型人事分析/README.md",
     },
 ]
 
@@ -231,7 +231,7 @@ def extract_title_and_snippet(md_text: str, fallback_name: str):
 def detect_hexagram_no(rel_path: str):
     """检测文档是否关联特定单卦 (1~64)"""
     parts = rel_path.split("/")
-    if parts[0] == "03 周易笺注":
+    if parts[0] == "03 周易笺注史鉴":
         m = re.match(r"^(\d{2})_", parts[-1])
         if m:
             no = int(m.group(1))
