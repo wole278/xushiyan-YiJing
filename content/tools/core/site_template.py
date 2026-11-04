@@ -30,7 +30,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
         <a href="#/" class="brand-link">
           <span class="brand-seal">易</span>
           <div class="brand-text">
-            <span class="brand-title">徐时言的周易研究</span>
+            <span class="brand-title">徐时言-易经研究</span>
             <span class="brand-sub">ZhouYi Research &amp; Review System</span>
           </div>
         </a>
