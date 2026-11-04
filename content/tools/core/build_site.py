@@ -118,6 +118,55 @@ TIER_1_RONGHE = {
 }
 
 
+MODULE_DIR_RE = re.compile(r"^(\d{2})[ _](.+)$")
+DEFAULT_ICON = "📚"
+
+
+def _readme_positioning(mod_dir: Path) -> str:
+    """从分支 README 的「模块定位」行或首段提取一句话简介"""
+    readme = mod_dir / "README.md"
+    if not readme.exists():
+        return ""
+    text = readme.read_text(encoding="utf-8")
+    m = re.search(r"模块定位\**\s*[:：]\**\s*(.+)", text)
+    if m:
+        line = m.group(1)
+    else:
+        line = next((l for l in text.splitlines() if l.strip() and not l.lstrip().startswith(("#", ">", "-", "|", "!"))), "")
+    line = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", line)
+    return re.sub(r"[*`>_#]", "", line).strip()
+
+
+def discover_modules(root: Path = None):
+    """自动发现研究分支：根目录下「两位编号 + 名称」且含 Markdown 的目录。
+    已在 MODULES_META 中登记的沿用其元数据；新分支自动生成默认元数据。"""
+    root = root or ROOT_DIR
+    known = {m["dir"]: m for m in MODULES_META}
+    mods = []
+    for p in sorted(root.iterdir()):
+        if not p.is_dir():
+            continue
+        mm = MODULE_DIR_RE.match(p.name)
+        if not mm or not any(p.rglob("*.md")):
+            continue
+        if p.name in known:
+            mods.append(known[p.name])
+            continue
+        code, name = mm.group(1), mm.group(2)
+        desc = _readme_positioning(p)
+        mods.append({
+            "code": code,
+            "dir": p.name,
+            "title": p.name,
+            "short": name,
+            "icon": DEFAULT_ICON,
+            "subtitle": desc[:40],
+            "desc": desc or f"{name}研究分支",
+            "default_doc": f"{p.name}/README.md" if (p / "README.md").exists() else "",
+        })
+    return mods
+
+
 def get_doc_tier(rel_path: str):
     """根据文档路径判定价值等级 (1~3级) 与核心依赖因子"""
     parts = rel_path.split("/")
@@ -302,7 +351,8 @@ def build_site(out_dir: Path):
     if root_readme.exists():
         all_md_files.append(("00", root_readme))
 
-    for mod in MODULES_META:
+    modules = discover_modules()
+    for mod in modules:
         mdir = ROOT_DIR / mod["dir"]
         if mdir.exists():
             for p in sorted(mdir.rglob("*.md")):
@@ -311,7 +361,7 @@ def build_site(out_dir: Path):
     all_known_paths = {p.relative_to(ROOT_DIR).as_posix() for _, p in all_md_files}
 
     # 3. 解析全部文档并按模块分片存储
-    docs_by_mod = {f"{i:02d}": {} for i in range(8)}
+    docs_by_mod = {"00": {}, **{m["code"]: {} for m in modules}}
     manifest_docs = []
     hexagram_links = {i: {"master": None, "reviews": [], "records": []} for i in range(1, 65)}
 
@@ -399,7 +449,7 @@ def build_site(out_dir: Path):
 
     # 5. 构建左侧目录树结构 (Sidebar Tree)
     sidebar_tree = []
-    for mod in MODULES_META:
+    for mod in modules:
         mcode = mod["code"]
         mdir = mod["dir"]
         mod_items = [d for d in manifest_docs if d["module"] == mcode]
