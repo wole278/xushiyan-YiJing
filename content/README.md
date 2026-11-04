@@ -8,4 +8,11 @@
 - **06 融合研究**：历史、考古与经传交叉研究
 
 > 本站内容由私有研究库经发布闸门（白名单筛选、脱敏、安全扫描）自动生成，持续更新。
-> 内容采用 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hans) 许可：转载请署名「徐时言-易经研究」并注明来源，禁止商业使用。
+
+## 授权与商业合作
+
+- 📜 文章采用 [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hans)（署名-非商业性使用-禁止演绎）：**欢迎免费个人阅读与学习**；原样转载请署名「徐时言-易经研究」并附来源链接。
+- 🚫 未经书面授权，**禁止商业使用**、**禁止传播改编版本**、**禁止用于 AI 训练与数据挖掘**。
+- 🤝 商业授权（出版、课程、咨询、机构使用、AI 数据授权）：📧 **wole278@hotmail.com**　💬 微信 **wole278**
+
+完整条款见 [NOTICE](https://github.com/wole278/xushiyan-YiJing/blob/main/NOTICE.md)。

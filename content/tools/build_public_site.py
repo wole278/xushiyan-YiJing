@@ -26,15 +26,31 @@ out = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else (CONTENT.parent / "_
 bs.build_site(out)
 
 title = info.get("site_title")
+idx = out / "index.html"
+html = idx.read_text(encoding="utf-8")
 if title:
     for name in ("manifest.json", "manifest.js"):
         p = out / "data" / name
         txt = p.read_text(encoding="utf-8")
         txt = re.sub(r'"siteTitle": "[^"]*"', f'"siteTitle": "{title}"', txt, count=1)
         p.write_text(txt, encoding="utf-8")
-    idx = out / "index.html"
-    html = idx.read_text(encoding="utf-8")
     html = re.sub(r"<title>[^<]*</title>", f"<title>{title}</title>", html, count=1)
-    idx.write_text(html, encoding="utf-8")
+
+# 版权与反 AI 训练声明（meta），以及页脚授权声明
+meta = (
+    '\n  <meta name="robots" content="index, follow, noai, noimageai">'
+    '\n  <meta name="copyright" content="© 徐时言 · CC BY-NC-ND 4.0 · 禁止商用与 AI 训练">'
+)
+if 'name="copyright"' not in html:
+    html = html.replace("<head>", "<head>" + meta, 1)
+notice = info.get("footer_notice")
+if notice and "footer-license" not in html:
+    html = html.replace(
+        '<div class="footer-meta">',
+        '<div class="footer-license" style="font-size:12px;opacity:.85;margin:6px 0;line-height:1.7">'
+        f"{notice}</div>\n        " + '<div class="footer-meta">',
+        1,
+    )
+idx.write_text(html, encoding="utf-8")
 
 print(f"[public-site] 完成：{out}（模块 {len(bs.MODULES_META)} 个，来源提交 {info.get('source_commit', '?')}）")

@@ -1,8 +1,12 @@
 {
   "site_title": "徐时言-易经研究",
-  "source_commit": "2951bf6",
-  "published_at": "2026-11-04T03:07:09Z",
+  "source_commit": "107fedb",
+  "published_at": "2026-11-04T04:16:29Z",
   "documents": 99,
   "assets": 27,
-  "license": "CC BY-NC 4.0"
+  "license": {
+    "content": "CC-BY-NC-ND-4.0",
+    "code": "PolyForm-Noncommercial-1.0.0"
+  },
+  "footer_notice": "© 2026 徐时言 · 文章 <a href=\"https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh-hans\" target=\"_blank\" rel=\"noopener\">CC BY-NC-ND 4.0</a> · 代码 PolyForm Noncommercial 1.0.0 · 禁止商用、改编传播与 AI 训练 · 商业授权：wole278@hotmail.com / 微信 wole278"
 }
