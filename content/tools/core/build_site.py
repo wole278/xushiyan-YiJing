@@ -601,6 +601,11 @@ def build_site(out_dir: Path):
     }
 
     # 写入 JSON 与 JS 数据分片（兼顾 HTTP fetch 与本地 file:// 直接双击打开）
+    from site_template import PORTAL_CSS, PORTAL_JS
+    pre_manifest_json = json.dumps(manifest_payload, ensure_ascii=False)
+    build_ver = hashlib.md5((pre_manifest_json + PORTAL_CSS + PORTAL_JS).encode("utf-8")).hexdigest()[:8]
+    manifest_payload["buildVer"] = build_ver
+
     manifest_json = json.dumps(manifest_payload, ensure_ascii=False)
     (out_dir / "data" / "manifest.json").write_text(manifest_json, encoding="utf-8")
     (out_dir / "data" / "manifest.js").write_text(f"window.__ZHOUYI_MANIFEST__ = {manifest_json};\n", encoding="utf-8")
@@ -618,14 +623,14 @@ def build_site(out_dir: Path):
     (out_dir / ".nojekyll").write_text("", encoding="utf-8")
 
     # 生成前端页面与样式脚本
-    write_frontend_files(out_dir)
+    write_frontend_files(out_dir, build_ver=build_ver)
     print(f"[build_site] 构建完成！共索引 {len(manifest_docs)} 篇学术文档、64 卦全息方阵与 {len(featured_papers)} 篇核心专论。")
 
 
-def write_frontend_files(out_dir: Path):
+def write_frontend_files(out_dir: Path, build_ver: str = ""):
     """写入东方雅致学术风 HTML / CSS / JS 前端文件"""
     from site_template import INDEX_HTML, PORTAL_CSS, PORTAL_JS
-    ver = hashlib.md5((PORTAL_CSS + PORTAL_JS).encode("utf-8")).hexdigest()[:8]
+    ver = build_ver or hashlib.md5((PORTAL_CSS + PORTAL_JS).encode("utf-8")).hexdigest()[:8]
     html = (
         INDEX_HTML
         .replace('href="assets/portal.css"', f'href="assets/portal.css?v={ver}"')

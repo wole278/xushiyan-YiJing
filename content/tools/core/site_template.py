@@ -2236,19 +2236,25 @@ PORTAL_JS = r"""/* =============================================================
   }
 
   // 2. 按需加载模块文档数据分片 (兼容 HTTP fetch 与 file:// script 标签动态加载)
-  function ensureChunkLoaded(modCode) {
-    if (state.chunks[modCode]) {
+  function ensureChunkLoaded(modCode, forceBust = false) {
+    if (!forceBust && state.chunks[modCode]) {
       return Promise.resolve(state.chunks[modCode]);
     }
+    const ver = state.manifest?.buildVer || "";
+    const qsParts = [];
+    if (ver) qsParts.push(`v=${encodeURIComponent(ver)}`);
+    if (forceBust) qsParts.push(`t=${Date.now()}`);
+    const qs = qsParts.length ? `?${qsParts.join("&")}` : "";
+
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      script.src = `data/docs_${modCode}.js`;
+      script.src = `data/docs_${modCode}.js${qs}`;
       script.onload = () => {
         state.chunks = window.__ZHOUYI_DOCS_CHUNKS__ || {};
         resolve(state.chunks[modCode] || {});
       };
       script.onerror = () => {
-        fetch(`data/docs_${modCode}.json`)
+        fetch(`data/docs_${modCode}.json${qs}`, { cache: forceBust ? "reload" : "default" })
           .then((r) => r.json())
           .then((data) => {
             state.chunks[modCode] = data;
@@ -2648,10 +2654,29 @@ PORTAL_JS = r"""/* =============================================================
     document.getElementById("readerView").classList.remove("hidden");
     document.getElementById("readerSidebar").classList.remove("open");
 
-    // 加载对应模块数据分片
-    const chunk = await ensureChunkLoaded(meta.module);
-    const docData = chunk[meta.id];
-    if (!docData) return;
+    // 加载对应模块数据分片（若命中旧缓存导致找不到 docData，自动强制破缓存重试一次）
+    let chunk = {};
+    try {
+      chunk = await ensureChunkLoaded(meta.module, false);
+    } catch (e) {
+      chunk = {};
+    }
+    let docData = chunk[meta.id];
+    if (!docData) {
+      try {
+        chunk = await ensureChunkLoaded(meta.module, true);
+        docData = chunk[meta.id];
+      } catch (e) {
+        docData = null;
+      }
+    }
+    if (!docData) {
+      const bodyEl = document.getElementById("markdownBody");
+      if (bodyEl) {
+        bodyEl.innerHTML = `<div class="md-alert alert-warning"><div class="md-alert-title">⚠️ 文档分片加载失败或缓存尚未同步</div><p>未能读取 <code>${escapeHtml(meta.id)}</code>，请按 <strong>Ctrl + F5</strong> 强制刷新页面，或稍候待站点部署完成后重试。</p></div>`;
+      }
+      return;
+    }
 
     // 更新顶部面包屑与价值评级栏
     const tierClass = meta.tier === 1 ? "tier-1" : meta.tier === 2 ? "tier-2" : "tier-3";
