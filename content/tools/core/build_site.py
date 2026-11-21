@@ -584,7 +584,14 @@ def build_site(out_dir: Path):
 def write_frontend_files(out_dir: Path):
     """写入东方雅致学术风 HTML / CSS / JS 前端文件"""
     from site_template import INDEX_HTML, PORTAL_CSS, PORTAL_JS
-    (out_dir / "index.html").write_text(INDEX_HTML, encoding="utf-8")
+    ver = hashlib.md5((PORTAL_CSS + PORTAL_JS).encode("utf-8")).hexdigest()[:8]
+    html = (
+        INDEX_HTML
+        .replace('href="assets/portal.css"', f'href="assets/portal.css?v={ver}"')
+        .replace('src="assets/portal.js"', f'src="assets/portal.js?v={ver}"')
+        .replace('src="data/manifest.js"', f'src="data/manifest.js?v={ver}"')
+    )
+    (out_dir / "index.html").write_text(html, encoding="utf-8")
     (out_dir / "assets").mkdir(parents=True, exist_ok=True)
     (out_dir / "assets" / "portal.css").write_text(PORTAL_CSS, encoding="utf-8")
     (out_dir / "assets" / "portal.js").write_text(PORTAL_JS, encoding="utf-8")

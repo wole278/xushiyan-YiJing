@@ -199,10 +199,6 @@ INDEX_HTML = r"""<!DOCTYPE html>
     <!-- 左侧可折叠目录树 (Sidebar) -->
     <aside class="reader-sidebar" id="readerSidebar">
       <div class="sidebar-header">
-        <div class="sidebar-toolbar">
-          <button class="sidebar-action-btn" id="sidebarToggleAllBtn" title="全部展开或折叠目录分组">▾ 全部折叠</button>
-          <button class="sidebar-action-btn sidebar-collapse-btn" id="sidebarCollapseBtn" title="收起左侧导航栏">« 收起</button>
-        </div>
         <div class="sidebar-mod-pills" id="sidebarModPills"></div>
         <div class="sidebar-filter-wrap">
           <input type="text" id="sidebarFilterInput" class="sidebar-filter-input" placeholder="过滤左侧目录文档..." />
@@ -213,7 +209,6 @@ INDEX_HTML = r"""<!DOCTYPE html>
 
     <!-- 居中期刊级文章阅读区 (Main Content) -->
     <div class="reader-main-wrap">
-      <button class="sidebar-expand-btn" id="sidebarExpandBtn" title="展开左侧导航栏">» 展开目录</button>
       <article class="reader-article-container">
         <!-- 顶部文章元数据栏 -->
         <div class="article-topbar" id="articleTopbar"></div>
@@ -1139,11 +1134,6 @@ a:hover {
   max-width: 1600px;
   margin: 0 auto;
   min-height: calc(100vh - var(--navbar-h));
-  transition: grid-template-columns 0.22s ease;
-}
-
-.reader-layout.sidebar-collapsed {
-  grid-template-columns: 0px minmax(0, 1fr) 250px;
 }
 
 .reader-sidebar {
@@ -1154,69 +1144,6 @@ a:hover {
   border-right: 1px solid var(--border-color);
   background: var(--bg-subtle);
   padding: 14px 14px 40px;
-  transition: padding 0.22s ease, opacity 0.18s ease;
-}
-
-.reader-layout.sidebar-collapsed .reader-sidebar {
-  padding: 0;
-  border-right: none;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.sidebar-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.sidebar-action-btn {
-  padding: 4px 9px;
-  border-radius: 5px;
-  font-size: 11.5px;
-  font-weight: 600;
-  border: 1px solid var(--border-color);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-.sidebar-action-btn:hover {
-  border-color: var(--accent-cinnabar);
-  color: var(--accent-cinnabar);
-}
-
-.sidebar-expand-btn {
-  display: none;
-  align-items: center;
-  gap: 4px;
-  position: sticky;
-  top: calc(var(--navbar-h) + 12px);
-  z-index: 40;
-  margin-bottom: 12px;
-  padding: 5px 11px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid var(--border-color);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-.sidebar-expand-btn:hover {
-  border-color: var(--accent-cinnabar);
-  color: var(--accent-cinnabar);
-}
-
-.reader-layout.sidebar-collapsed .sidebar-expand-btn {
-  display: inline-flex;
 }
 
 .sidebar-mod-pills {
@@ -1262,6 +1189,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 6px;
   padding: 7px 8px;
   font-family: var(--font-serif);
   font-size: 14px;
@@ -1277,13 +1205,16 @@ a:hover {
 }
 
 .tree-chevron {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   transition: transform 0.18s ease;
   flex-shrink: 0;
 }
 
-.tree-mod-block.collapsed .tree-mod-groups,
+.tree-mod-block.collapsed .tree-mod-groups {
+  display: none;
+}
+
 .tree-group.collapsed .tree-group-items {
   display: none;
 }
@@ -1837,9 +1768,6 @@ mark {
   .reader-layout {
     grid-template-columns: 270px minmax(0, 1fr);
   }
-  .reader-layout.sidebar-collapsed {
-    grid-template-columns: 0px minmax(0, 1fr);
-  }
   .reader-outline {
     display: none;
   }
@@ -1855,13 +1783,8 @@ mark {
   .navbar-links .nav-item {
     display: none;
   }
-  .reader-layout,
-  .reader-layout.sidebar-collapsed {
+  .reader-layout {
     grid-template-columns: 1fr;
-  }
-  .sidebar-collapse-btn,
-  .reader-layout.sidebar-collapsed .sidebar-expand-btn {
-    display: none;
   }
   .reader-sidebar {
     position: fixed;
@@ -1871,13 +1794,6 @@ mark {
     z-index: 150;
     transition: left 0.25s ease;
     box-shadow: var(--shadow-lg);
-  }
-  .reader-layout.sidebar-collapsed .reader-sidebar {
-    padding: 14px 14px 40px;
-    border-right: 1px solid var(--border-color);
-    overflow-y: auto;
-    opacity: 1;
-    pointer-events: auto;
   }
   .reader-sidebar.open {
     left: 0;
@@ -1928,19 +1844,9 @@ PORTAL_JS = r"""/* =============================================================
     activeFeaturedCat: "all",
     currentDocId: null,
     theme: localStorage.getItem("zhouyi_theme") || "light",
-    sidebarCollapsed: localStorage.getItem("zhouyi_sidebar_collapsed") === "1",
     collapsedMods: new Set(),
     collapsedGroups: new Set(),
   };
-
-  function applySidebarCollapsed(collapsed) {
-    state.sidebarCollapsed = collapsed;
-    localStorage.setItem("zhouyi_sidebar_collapsed", collapsed ? "1" : "0");
-    const rv = document.getElementById("readerView");
-    if (rv) {
-      rv.classList.toggle("sidebar-collapsed", collapsed);
-    }
-  }
 
   // 1. 初始化主题与 Mermaid
   function applyTheme(theme) {
@@ -2182,9 +2088,6 @@ PORTAL_JS = r"""/* =============================================================
       (m) => state.activeModFilter === "all" || m.code === state.activeModFilter
     );
 
-    const visibleModCodes = [];
-    const visibleGroupKeys = [];
-
     treeEl.innerHTML = mods
       .map((mod) => {
         const isModCollapsed = !q && state.collapsedMods.has(mod.code);
@@ -2196,7 +2099,6 @@ PORTAL_JS = r"""/* =============================================================
             if (!items.length) return "";
 
             const grpKey = `${mod.code}::${grp.title}`;
-            visibleGroupKeys.push(grpKey);
             const isGrpCollapsed = !q && state.collapsedGroups.has(grpKey);
 
             const linksHtml = items
@@ -2229,7 +2131,6 @@ PORTAL_JS = r"""/* =============================================================
           .join("");
 
         if (!groupsHtml) return "";
-        visibleModCodes.push(mod.code);
         return `
         <div class="tree-mod-block ${isModCollapsed ? "collapsed" : ""}">
           <div class="tree-mod-header" data-mod-toggle="${escapeHtml(mod.code)}">
@@ -2265,15 +2166,6 @@ PORTAL_JS = r"""/* =============================================================
         renderSidebar(document.getElementById("sidebarFilterInput")?.value || "");
       });
     });
-
-    const toggleAllBtn = document.getElementById("sidebarToggleAllBtn");
-    if (toggleAllBtn) {
-      const allCollapsed =
-        visibleModCodes.length > 0 &&
-        visibleModCodes.every((c) => state.collapsedMods.has(c));
-      toggleAllBtn.textContent = allCollapsed ? "▸ 全部展开" : "▾ 全部折叠";
-      toggleAllBtn.dataset.allCollapsed = allCollapsed ? "1" : "0";
-    }
   }
 
   // 8. 渲染 Markdown 文本（支持 KaTeX 数学公式、GitHub Alerts、Mermaid 流程图）
@@ -2628,7 +2520,6 @@ PORTAL_JS = r"""/* =============================================================
   // 14. 启动初始化
   function init() {
     applyTheme(state.theme);
-    applySidebarCollapsed(state.sidebarCollapsed);
 
     if (state.manifest) {
       document.getElementById("statTotalDocs").textContent = `${state.manifest.stats.totalDocs} 篇`;
@@ -2683,34 +2574,6 @@ PORTAL_JS = r"""/* =============================================================
     // 绑定左侧目录过滤
     document.getElementById("sidebarFilterInput")?.addEventListener("input", (e) => {
       renderSidebar(e.target.value);
-    });
-
-    // 绑定左侧导航栏整体收起 / 展开
-    document.getElementById("sidebarCollapseBtn")?.addEventListener("click", () => {
-      applySidebarCollapsed(true);
-    });
-    document.getElementById("sidebarExpandBtn")?.addEventListener("click", () => {
-      applySidebarCollapsed(false);
-    });
-
-    // 绑定目录树全部折叠 / 全部展开
-    document.getElementById("sidebarToggleAllBtn")?.addEventListener("click", (e) => {
-      if (!state.manifest) return;
-      const allCollapsed = e.currentTarget.dataset.allCollapsed === "1";
-      const mods = state.manifest.modules.filter(
-        (m) => state.activeModFilter === "all" || m.code === state.activeModFilter
-      );
-      if (allCollapsed) {
-        mods.forEach((m) => {
-          state.collapsedMods.delete(m.code);
-          m.groups.forEach((g) => state.collapsedGroups.delete(`${m.code}::${g.title}`));
-        });
-      } else {
-        mods.forEach((m) => {
-          state.collapsedMods.add(m.code);
-        });
-      }
-      renderSidebar(document.getElementById("sidebarFilterInput")?.value || "");
     });
 
     // 绑定全局搜索弹窗 (Ctrl+K)
