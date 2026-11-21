@@ -101,6 +101,16 @@ MODULES_META = [
         "desc": "依托 384 爻时位实证矩阵与生生四判据，对曹操、秦始皇、刘邦、毛泽东、王猛、周恩来等历史人物开展去脸谱化的唯物战略解构。",
         "default_doc": "07 易经模型人事分析/README.md",
     },
+    {
+        "code": "08",
+        "dir": "08 周易源流与哲学史",
+        "title": "08 周易源流与哲学史",
+        "short": "源流与哲学史",
+        "icon": "📜",
+        "subtitle": "双编纵贯古今 · 文本考古源流 · 哲学范式演进",
+        "desc": "从史前数字卦到当代实践唯物论，分设「01_周易源流编」与「02_周易哲学史编」，系统考察经传版本流变与历代易学哲学交锋。",
+        "default_doc": "08 周易源流与哲学史/README.md",
+    },
 ]
 
 TIER_1_CIYI = {
@@ -183,6 +193,8 @@ def get_doc_tier(rel_path: str):
     if top == "06 融合研究记录":
         if fname in TIER_1_RONGHE:
             return 1, 0.4, "1级 · 0.4"
+        return 2, 0.3, "2级 · 0.3"
+    if top == "08 周易源流与哲学史":
         return 2, 0.3, "2级 · 0.3"
     if top == "01 审议体系":
         if len(parts) > 1 and parts[1] in ("01_标准与规范", "02_回测与实证"):
@@ -526,7 +538,7 @@ def build_site(out_dir: Path):
     # 6. 精选 1 级 (0.4) 与 2 级 (0.3) 学术成果展台
     featured_papers = [
         d for d in manifest_docs
-        if d["name"] != "README.md" and d["module"] in ("01", "02", "05", "06", "07") and (d["tier"] in (1, 2) or d["module"] == "07")
+        if d["name"] != "README.md" and d["module"] in ("01", "02", "05", "06", "07", "08") and (d["tier"] in (1, 2) or d["module"] == "07")
     ]
     featured_papers.sort(key=lambda x: (x["tier"], x["module"], x["id"]))
 

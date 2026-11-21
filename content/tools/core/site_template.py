@@ -174,6 +174,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
           <button class="feat-tab" data-cat="05">🔤 05 词义研究论文</button>
           <button class="feat-tab" data-cat="06">⚔️ 06 融合研究论文</button>
           <button class="feat-tab" data-cat="07">👤 07 历史人物分析</button>
+          <button class="feat-tab" data-cat="08">📜 08 源流与哲学史</button>
         </div>
 
         <div class="featured-grid" id="featuredGrid"></div>
