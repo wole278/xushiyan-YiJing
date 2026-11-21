@@ -39,7 +39,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
       <div class="navbar-search">
         <button class="search-trigger-btn" id="openSearchBtn">
           <span class="search-icon">🔍</span>
-          <span class="search-placeholder">检索全库 01–07 文献、卦爻、词义...</span>
+          <span class="search-placeholder">检索全库 01–09 文献、卦爻、词义...</span>
           <kbd class="search-kbd">Ctrl K</kbd>
         </button>
       </div>
@@ -108,20 +108,20 @@ INDEX_HTML = r"""<!DOCTYPE html>
           </div>
           <div class="stat-card">
             <div class="stat-value" id="statTotalDocs">251 篇</div>
-            <div class="stat-label">01–07 全库学术研究文档</div>
+            <div class="stat-label">01–09 全库学术研究文档</div>
             <div class="stat-note">原典 verify.cmd 逐字核验闭环</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. 01-07 七大研究模块卡片导航 -->
+    <!-- 2. 01-09 九大研究模块卡片导航 -->
     <section class="home-section" id="modulesSection">
       <div class="section-container">
         <div class="section-header">
           <div>
-            <span class="section-eyebrow">SEVEN RESEARCH MODULES</span>
-            <h2 class="section-title">01–07 七大核心研究模块导航</h2>
+            <span class="section-eyebrow">NINE RESEARCH MODULES</span>
+            <h2 class="section-title">01–09 九大核心研究模块导航</h2>
           </div>
           <p class="section-desc">从顶层审议法典、1级元哲学公理、64卦权威母本到单卦档案、词义训诂、跨界融合与历史人物全周期研判</p>
         </div>
@@ -175,6 +175,7 @@ INDEX_HTML = r"""<!DOCTYPE html>
           <button class="feat-tab" data-cat="06">⚔️ 06 融合研究论文</button>
           <button class="feat-tab" data-cat="07">👤 07 历史人物分析</button>
           <button class="feat-tab" data-cat="08">📜 08 源流与哲学史</button>
+          <button class="feat-tab" data-cat="09">🧭 09 周易数术纲目</button>
         </div>
 
         <div class="featured-grid" id="featuredGrid"></div>
@@ -700,7 +701,7 @@ a:hover {
 }
 
 /* ==========================================================================
-   通用章节与 01-07 模块卡片
+   通用章节与 01-09 模块卡片
    ========================================================================== */
 .home-section {
   padding: 56px 24px;
@@ -1899,7 +1900,7 @@ PORTAL_JS = r"""/* =============================================================
       .join("")}</div>`;
   }
 
-  // 4. 渲染首页：01–07 七大模块卡片
+  // 4. 渲染首页：01–09 九大模块卡片
   function renderModulesGrid() {
     const grid = document.getElementById("modulesGrid");
     if (!grid || !state.manifest) return;

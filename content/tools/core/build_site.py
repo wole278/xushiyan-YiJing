@@ -111,6 +111,16 @@ MODULES_META = [
         "desc": "从史前数字卦到当代实践唯物论，分设「01_周易源流编」与「02_周易哲学史编」，系统考察经传版本流变与历代易学哲学交锋。",
         "default_doc": "08 周易源流与哲学史/README.md",
     },
+    {
+        "code": "09",
+        "dir": "09 周易数术纲目",
+        "title": "09 周易数术纲目",
+        "short": "周易数术纲目",
+        "icon": "🧭",
+        "subtitle": "共性基座 · 三式绝学 · 象数卜筮 · 禄命星占 · 形法相地",
+        "desc": "以阴阳协和、八卦河洛九宫、十二消息、二十四山与五行生克为共性基座，依《古今图书集成》《永乐大典》《道藏》对太乙、奇门（术/法）、大六壬、六爻纳甲、四柱八字、紫微斗数、风水堪舆、相术摸骨开展一术一详述。",
+        "default_doc": "09 周易数术纲目/README.md",
+    },
 ]
 
 TIER_1_CIYI = {
@@ -195,6 +205,8 @@ def get_doc_tier(rel_path: str):
             return 1, 0.4, "1级 · 0.4"
         return 2, 0.3, "2级 · 0.3"
     if top == "08 周易源流与哲学史":
+        return 2, 0.3, "2级 · 0.3"
+    if top == "09 周易数术纲目":
         return 2, 0.3, "2级 · 0.3"
     if top == "01 审议体系":
         if len(parts) > 1 and parts[1] in ("01_标准与规范", "02_回测与实证"):
@@ -521,6 +533,21 @@ def build_site(out_dir: Path):
                     "items": [d for d in mod_items if d["hexNo"] and 31 <= d["hexNo"] <= 64],
                 },
             ]
+        elif mcode == "08":
+            groups = [
+                {"title": "📌 模块总览", "items": [d for d in mod_items if d["id"] == f"{mdir}/README.md"]},
+                {"title": "📜 01_周易源流编", "items": [d for d in mod_items if "/01_周易源流编/" in d["id"]]},
+                {"title": "🏛️ 02_周易哲学史编", "items": [d for d in mod_items if "/02_周易哲学史编/" in d["id"]]},
+            ]
+        elif mcode == "09":
+            groups = [
+                {"title": "📌 模块总览与学术规约", "items": [d for d in mod_items if d["name"] == "README.md"]},
+                {"title": "🧱 共性基座（阴阳八卦河洛九宫十二消息二十四山五行）", "items": [d for d in mod_items if d["name"].startswith("01_")]},
+                {"title": "🌌 第一序列：三式绝学（太乙 · 奇门 · 大六壬）", "items": [d for d in mod_items if d["name"].startswith(("02_", "03_", "04_"))]},
+                {"title": "☯️ 第二序列：象数卜筮（六爻纳甲 · 火珠林）", "items": [d for d in mod_items if d["name"].startswith("05_")]},
+                {"title": "⭐ 第三序列：禄命星占（四柱八字 · 紫微斗数）", "items": [d for d in mod_items if d["name"].startswith(("06_", "07_"))]},
+                {"title": "⛰️ 第四序列：形法相地（风水堪舆 · 相术摸骨）", "items": [d for d in mod_items if d["name"].startswith(("08_", "09_"))]},
+            ]
         else:
             readme_items = [d for d in mod_items if d["name"] == "README.md"]
             other_items = [d for d in mod_items if d["name"] != "README.md"]
@@ -538,7 +565,7 @@ def build_site(out_dir: Path):
     # 6. 精选 1 级 (0.4) 与 2 级 (0.3) 学术成果展台
     featured_papers = [
         d for d in manifest_docs
-        if d["name"] != "README.md" and d["module"] in ("01", "02", "05", "06", "07", "08") and (d["tier"] in (1, 2) or d["module"] == "07")
+        if d["name"] != "README.md" and d["module"] in ("01", "02", "05", "06", "07", "08", "09") and (d["tier"] in (1, 2) or d["module"] == "07")
     ]
     featured_papers.sort(key=lambda x: (x["tier"], x["module"], x["id"]))
 
