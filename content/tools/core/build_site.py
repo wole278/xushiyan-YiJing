@@ -541,13 +541,18 @@ def build_site(out_dir: Path):
             ]
         elif mcode == "09":
             groups = [
-                {"title": "📌 模块总览与学术规约", "items": [d for d in mod_items if d["name"] == "README.md"]},
-                {"title": "🧱 共性基座（阴阳八卦河洛九宫十二消息二十四山五行）", "items": [d for d in mod_items if d["name"].startswith("01_")]},
-                {"title": "🌌 第一序列：三式绝学（太乙 · 奇门 · 大六壬）", "items": [d for d in mod_items if d["name"].startswith(("02_", "03_", "04_"))]},
-                {"title": "☯️ 第二序列：象数卜筮（六爻纳甲 · 火珠林）", "items": [d for d in mod_items if d["name"].startswith("05_")]},
-                {"title": "⭐ 第三序列：禄命星占（四柱八字 · 紫微斗数）", "items": [d for d in mod_items if d["name"].startswith(("06_", "07_"))]},
-                {"title": "⛰️ 第四序列：形法相地（风水堪舆 · 相术摸骨）", "items": [d for d in mod_items if d["name"].startswith(("08_", "09_"))]},
+                {"title": "📌 模块总览与目录大纲", "items": [d for d in mod_items if d["name"] == "README.md"]},
+                {"title": "🧱 01 共性基座（阴阳八卦河洛九宫十二消息二十四山五行）", "items": [d for d in mod_items if "/01_共性基座/" in d["id"] or d["name"].startswith("01_共性基座")]},
+                {"title": "🌌 02 太乙神数（三式绝学 · 天道国运）", "items": [d for d in mod_items if "/02_太乙神数/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("02_"))]},
+                {"title": "🌌 03 奇门遁甲（三式绝学 · 术奇门与法奇门）", "items": [d for d in mod_items if "/03_奇门遁甲/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("03_"))]},
+                {"title": "🌌 04 大六壬（三式绝学 · 人事日用之冠）", "items": [d for d in mod_items if "/04_大六壬/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("04_"))]},
+                {"title": "☯️ 05 六爻纳甲（象数卜筮 · 八宫火珠林）", "items": [d for d in mod_items if "/05_六爻纳甲/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("05_"))]},
+                {"title": "⭐ 06 四柱八字（禄命星占 · 子平格局）", "items": [d for d in mod_items if "/06_四柱八字/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("06_"))]},
+                {"title": "⭐ 07 紫微斗数（禄命星占 · 十二宫飞星）", "items": [d for d in mod_items if "/07_紫微斗数/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("07_"))]},
+                {"title": "⛰️ 08 风水堪舆（形法相地 · 峦头与理气）", "items": [d for d in mod_items if "/08_风水堪舆/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("08_"))]},
+                {"title": "⛰️ 09 相术摸骨（形法相地 · 骨相与气色）", "items": [d for d in mod_items if "/09_相术摸骨/" in d["id"] or (d["id"].count("/") == 1 and d["name"].startswith("09_"))]},
             ]
+            groups = [g for g in groups if g["items"]]
         else:
             readme_items = [d for d in mod_items if d["name"] == "README.md"]
             other_items = [d for d in mod_items if d["name"] != "README.md"]
@@ -563,10 +568,19 @@ def build_site(out_dir: Path):
         })
 
     # 6. 精选 1 级 (0.4) 与 2 级 (0.3) 学术成果展台
-    featured_papers = [
-        d for d in manifest_docs
-        if d["name"] != "README.md" and d["module"] in ("01", "02", "05", "06", "07", "08", "09") and (d["tier"] in (1, 2) or d["module"] == "07")
-    ]
+    def _is_featured_doc(d):
+        if d["name"] == "README.md":
+            return False
+        if d["module"] == "09":
+            return (
+                "/01_共性基座/" in d["id"]
+                or d["name"].startswith("01_共性基座")
+                or d["name"] in ("01_源流详考.md", "02_分级教程.md", "03_动画实操演练.md")
+                or (d["id"].count("/") == 1 and bool(re.match(r"^0[2-9]_", d["name"])))
+            )
+        return d["module"] in ("01", "02", "05", "06", "07", "08") and (d["tier"] in (1, 2) or d["module"] == "07")
+
+    featured_papers = [d for d in manifest_docs if _is_featured_doc(d)]
     featured_papers.sort(key=lambda x: (x["tier"], x["module"], x["id"]))
 
     manifest_payload = {
